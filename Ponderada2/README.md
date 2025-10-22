@@ -5,138 +5,91 @@
 A proposta consistia em fazer o LED acender e apagar em intervalos definidos, simulando o efeito de piscar.
 Posteriormente, o mesmo código foi adaptado para um LED externo, conectado em um protoboard e simulado no Tinkercad.
 
-# RC Circuit (Arduino + Python) — Data capture and visualization
+# Circuito RC (Arduino + Python) — Aquisição de dados e visualização
 
-This repository contains a simple RC (resistor-capacitor) experiment where an Arduino-compatible sketch streams voltage measurements over the serial port and a Python script parses that output and produces the visualization shown in the figure.
+Este repositório contém um experimento simples de circuito RC (resistor-capacitor) em que um sketch compatível com Arduino transmite medições de tensão pela porta serial e um script Python interpreta essa saída e produz as visualizações mostradas na figura.
 
-What this project does
-- The Arduino code (provided here as a Python-format file named `import matplotlib.py`) runs on an Arduino UNO or compatible board. It measures voltages related to charging/discharging a capacitor in a small RC circuit and prints timestamped values to the serial monitor.
-- The included Python script reads the serial output (or a pasted serial log), parses the timestamp and voltage columns, and generates plots showing: the capacitor voltage during charge, the resistor voltage during discharge, and a comparison plot.
+O que este projeto faz
+- O código Arduino (fornecido aqui em um arquivo de formato Python chamado `import matplotlib.py`) roda em um Arduino UNO ou placa compatível. Ele mede tensões relacionadas ao carregamento/descarga de um capacitor em um pequeno circuito RC e imprime valores com timestamp no monitor serial.
+- O script Python incluído lê a saída serial (ou um log serial colado), analisa as colunas de tempo e tensão e gera gráficos mostrando: a tensão do capacitor durante a carga, a tensão no resistor durante a descarga e um gráfico comparativo.
 
-Files in this repo
-- `import matplotlib.py` — contains the Arduino sketch (exported or stored in this file). Treat it as the source code to upload to the Arduino IDE. The file also contains a Python visualization script (see below) — if you split them, keep the Arduino sketch for the board and the Python script for visualization.
-- `demo.mp4` — a short video demonstrating the circuit running and the live serial output being recorded. The video is embedded below.
-- `README.md` — this file.
-
-How the experiment is organized (brief)
-- Circuit: Arduino UNO, capacitor (10 uF / 25 V), a large resistor (Re = 1 MΩ) for the slow charge path and a small discharge resistor (Rd = 100 Ω). A push-button or switch is used to toggle charge/discharge.
-- Measurements: The Arduino reads analog voltages and prints them with timestamps (milliseconds). The serial output is a plain-text table of time and measured voltages (CSV-like or whitespace-delimited).
-
-Expected serial output format
-Use one of these simple formats the Python parser accepts (example lines):
-
-		0, 0.12, 4.88
-		100, 0.14, 4.86
-
-Where columns are: timestamp_ms, Vr (voltage across resistor), Vc (voltage across capacitor)
-
-How to run (Windows PowerShell)
-1) Upload the Arduino sketch to your Arduino UNO using the Arduino IDE. If the code is in `import matplotlib.py`, open it and paste the Arduino portion into a `.ino` sketch.
-2) Option A — Use the live serial port:
-	 - Open a serial terminal (Arduino IDE Serial Monitor or any serial terminal) at the baud rate the sketch uses (commonly 9600 or 115200).
-	 - Copy the serial output to a text file (for example `serial_log.txt`). If you use the Arduino Serial Monitor, select all text and save it.
-3) Option B — Use the provided `demo.mp4` to inspect the recorded behavior or to extract the serial text manually.
-
-Parsing and plotting with Python
-The repository includes a Python script (in the same `import matplotlib.py` file or as a separate script you create) that:
-- Reads a serial log file or pasted serial text.
-- Parses time and voltage columns.
-- Produces three plots: capacitor charge (Vc vs time), resistor discharge (Vr vs time), and a combined comparison.
-
-If you want a minimal standalone Python script (recommended to separate concerns), create `plot_serial.py` with the following behavior:
-
-- Requirements: Python 3.8+ and matplotlib, pandas (optional)
-
-Install dependencies in PowerShell (one-time):
-
-```powershell
-python -m pip install --user matplotlib pandas
-```
-
-Run the parser (example, for a file called `serial_log.txt`):
-
-```powershell
-python plot_serial.py serial_log.txt
-```
-
-The script will save PNGs of the three plots and open them interactively (if your platform supports it).
-
-Embedding the demo video
-Below is the demo video showing the circuit running and the serial monitor output. If your Markdown viewer supports video embedding, it will show; otherwise open `demo.mp4` in a video player.
-
-<video controls width="640">
-	<source src="demo.mp4" type="video/mp4">
-	Your browser does not support the video tag. Open `demo.mp4` in your video player.
-</video>
-
-Notes and cleanup
-- The original slide images and TinkerCAD / Fritzing instructions (intended for in-lab assembly) were removed from this README to keep the repository focused on the code + data workflow.
-- If you prefer the Arduino code and the Python plotting code to be in separate files, I can split `import matplotlib.py` into `arduino_sketch.ino` and `plot_serial.py` and add a small test and example serial log.
-
-Troubleshooting
-- If your Python script can't parse the log, open the `serial_log.txt` and ensure the data lines match the expected three-column (time, Vr, Vc) format separated by commas or whitespace. If your Arduino sketch prints extra text (headers or prompts), remove them or modify the parser to skip non-numeric lines.
-
-Want me to split files or add the plot script?
-# Experimento Circuito RC — Arduino + Python (versão final)
-
-Este repositório contém um experimento de circuito RC (resistor-capacitor). A placa Arduino mede tensões relacionadas ao carregamento/descarga do capacitor e envia valores pelo monitor serial. O arquivo `Data.py` neste repositório contém um exemplo de código Python que gera os gráficos usados para análise (os dados podem vir de um arquivo de log gravado a partir do monitor serial ou ser inseridos manualmente no script).
-
-Resumo do que está no repositório
-- `Data.py` — script Python que lê dados (exemplos embutidos) e plota as curvas de tensão. Atualmente contém um vetor de dados de exemplo e gera o gráfico comparativo.
-- `Figure_1.png` — figura usada como visualização dos resultados (gerada a partir dos dados). (Se desejar, a figura pode ser substituída por saída nova do `Data.py`).
-- `Recording 2025-10-22 004704.mp4` — gravação do experimento e do monitor serial (vídeo demonstrativo).
+Arquivos neste repositório
+- `import matplotlib.py` — contém o sketch Arduino (exportado ou armazenado neste arquivo). Trate-o como o código-fonte a ser carregado no Arduino IDE. O arquivo também pode conter o script de visualização em Python (veja abaixo) — se você separar os arquivos, mantenha o sketch para o Arduino e o script Python para a visualização.
+- `demo.mp4` — vídeo curto demonstrando o circuito em funcionamento e a saída serial sendo registrada. O vídeo está incorporado abaixo.
 - `README.md` — este arquivo.
 
-Formato de dados aceito / estrutura
-- Cada linha de dado deve ter 3 valores: tempo_em_ms, Vr (tensão no resistor), Vc (tensão no capacitor).
-- Exemplo de linha aceita:
+Como o experimento está organizado (resumo)
+- Circuito: Arduino UNO, capacitor (10 µF / 25 V), um resistor grande (Re = 1 MΩ) para o caminho de carga lento e um resistor de descarga pequeno (Rd = 100 Ω). Um botão ou chave é usado para alternar entre carga e descarga.
+- Medições: o Arduino lê tensões analógicas e as imprime com timestamps (milissegundos). A saída serial é uma tabela em texto simples com tempo e tensões medidas (formato tipo CSV ou delimitado por espaços).
 
-		0, 0.12, 4.88
+Formato esperado da saída serial
+Use um destes formatos simples que o parser Python aceita (linhas de exemplo):
 
-Como `Data.py` está organizado (explicação rápida)
-- O arquivo contém um array de tuplas com (timestamp_ms, Vr, Vc). O script separa as colunas e traça dois conjuntos de dados (Vr e Vc) contra o tempo usando matplotlib.
-- O código é um bom ponto de partida: você pode substituí-lo por leitura de arquivo (csv/txt) ou por leitura direta da porta serial (COMx).
+    0, 0.12, 4.88
+    100, 0.14, 4.86
 
-Instruções para executar (Windows PowerShell)
-1) Instale dependências (uma vez):
+Onde as colunas são: timestamp_ms, Vr (tensão no resistor), Vc (tensão no capacitor)
+
+Como executar (Windows PowerShell)
+1) Carregue o sketch Arduino no seu Arduino UNO usando o Arduino IDE. Se o código estiver em `import matplotlib.py`, abra-o e cole a parte Arduino em um sketch `.ino`.
+2) Opção A — Usar a porta serial ao vivo:
+   - Abra um terminal serial (Serial Monitor do Arduino IDE ou outro terminal serial) com a taxa de transmissão (baud) que o sketch usa (comumente 9600 ou 115200).
+   - Copie a saída serial para um arquivo de texto (por exemplo `serial_log.txt`). Se usar o Serial Monitor do Arduino, selecione todo o texto e salve.
+3) Opção B — Use o `demo.mp4` fornecido para inspecionar o comportamento gravado ou para extrair o texto serial manualmente.
+
+
+Processamento e plotagem com Python
+O repositório inclui o script `Data.py`, que:
+- lê um arquivo de log serial ou texto copiado do monitor serial;
+- analisa as colunas de tempo e tensão;
+- produz três gráficos: carga do capacitor (Vc vs tempo), descarga no resistor (Vr vs tempo) e um gráfico comparativo.
+
+Para um script Python independente, recomenda-se criar `plot_serial.py` com comportamento análogo.
+
+Requisitos
+- Python 3.8+
+- matplotlib
+- pandas (opcional)
+
+Instalação de dependências (PowerShell):
 
 ```powershell
 python -m pip install --user matplotlib pandas
 ```
 
-2) Para executar o `Data.py` que já contém dados de exemplo:
+Execução
+- Executar o script com os dados embutidos (exemplo):
 
 ```powershell
 python Data.py
 ```
 
-3) Se preferir processar um arquivo `serial_log.txt` (uma linha por registro):
+- Processar um arquivo de log `serial_log.txt`: coloque o arquivo na mesma pasta e edite `Data.py` para carregar o arquivo ou adapte o script para aceitar um argumento de linha de comando com o caminho do arquivo.
 
-- Posicione `serial_log.txt` na mesma pasta e edite `Data.py` para carregar os dados desse arquivo (ou solicite que eu faça essa alteração; posso adicionar leitura automática de arquivo). Uma alternativa é executar `python Data.py serial_log.txt` caso eu adicione suporte a argumento de linha de comando.
+Saída do script
+- O script exibe uma janela com os gráficos de Vr e Vc versus tempo. É recomendado salvar as figuras em PNG para documentação e comparação entre ensaios.
 
-O que o script gera
-- Um gráfico (janela interativa) com as duas curvas (Vr e Vc) e, se desejado, arquivos PNG salvos automaticamente. O exemplo atual desenha o gráfico e chama `plt.show()`.
+Imagens e vídeo
+- `Figure_1.png` contém uma visualização de exemplo. Para atualizar a figura com novos dados, execute o script e salve a saída em PNG substituindo este arquivo.
+- `Recording 2025-10-22 004704.mp4` demonstra o experimento em funcionamento e a saída do monitor serial.
 
-Imagens e Vídeo (uso no README)
-- A figura `Figure_1.png` está disponível no repositório; certifique-se de que ela representa a saída do `Data.py` (se não, posso gerar uma nova imagem a partir dos dados e atualizar o arquivo).
-- O vídeo `Recording 2025-10-22 004704.mp4` demonstra a montagem em funcionamento e a saída do monitor serial. Ele já está incluído no repositório; se quiser um nome de arquivo mais curto posso renomeá-lo.
+Respostas às etapas do exercício
+- Copiar valores do monitor serial e colar no Python: gere um arquivo `serial_log.txt` a partir do Monitor Serial e processe-o com `Data.py` ou `plot_serial.py`.
+- Gerar o gráfico da carga no capacitor: o script plota `Vc` vs tempo.
+- Gerar o gráfico da descarga no resistor: o script plota `Vr` vs tempo.
+- Comparar os dois gráficos: o gráfico combinado mostra ambas as curvas com legenda e rótulos.
 
-Respostas às perguntas/etapas originais do exercício
-- Copiar valores do MONITOR SERIAL e colar no Python: Sim — o `Data.py` já contém um vetor de exemplo com valores. Para usar valores reais, basta gerar `serial_log.txt` a partir do Monitor Serial e processá-lo (posso adicionar essa funcionalidade automaticamente).
-- Montar um gráfico da carga no capacitor: Sim — `Data.py` plota `Vc` vs `tempo`.
-- Montar um gráfico da descarga no resistor: Sim — `Data.py` plota `Vr` vs `tempo`.
-- Comparar os dois gráficos: Sim — o gráfico combinado mostra ambas as curvas; ajustar legendas e cores melhora a comparação (posso atualizar o script para rótulos em Português e salvar as figuras).
+Sugestões de melhorias (opções implementáveis)
+1) Adicionar suporte a leitura de arquivo `serial_log.txt` via argumento de linha de comando com parsing robusto (ignorar linhas não numéricas).
+2) Adicionar leitura direta da porta serial (opção `--serial COMx`) com parâmetro de baud rate.
+3) Gerar e salvar automaticamente `Figure_1.png` a partir dos dados atuais.
+4) Traduzir e melhorar rótulos do gráfico (legenda, título, unidades) e ajustar layout.
 
-Sugestões de melhorias que posso aplicar agora (escolha uma ou mais):
-1) Adicionar leitura de arquivo `serial_log.txt` via argumento de linha de comando e parsing robusto (ignorar linhas não-numéricas).
-2) Adicionar leitura da porta serial (argumento `--serial COM3`), com escolha de baud rate.
-3) Gerar e salvar automaticamente `Figure_1.png` a partir dos dados atuais e substituir o arquivo existente.
-4) Traduzir/ajustar rótulos do gráfico para Português e melhorar layout (legenda, título, unidades).
+Verificação rápida
+- `Data.py` contém dados de exemplo e um plot funcional.
+- `Figure_1.png` e `Recording 2025-10-22 004704.mp4` existem na pasta do projeto.
 
-Verificação rápida (estado atual)
-- `Data.py` existe e contém dados de exemplo e um plot funcional (já pronto para execução).
-- `Figure_1.png` e `Recording 2025-10-22 004704.mp4` existem na pasta do projeto e são referenciados aqui.
-
-Próximo passo (se quiser que eu acrescente):
-- Posso implementar a opção 1 (leitura de `serial_log.txt`) e a opção 4 (melhorar rótulos e salvar PNGs). Diga quais opções prefere e eu aplico as mudanças imediatamente.
+Próximo passo (implementação)
+- Implementar uma ou mais das sugestões acima conforme necessidade do projeto.
+```powershell
 
